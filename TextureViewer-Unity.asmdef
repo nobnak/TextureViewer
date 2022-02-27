@@ -1,0 +1,16 @@
+{
+    "name": "TextureViewer-Unity",
+    "rootNamespace": "",
+    "references": [
+        "GUID:50062d9838aa6f245b408563bbba59f6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
