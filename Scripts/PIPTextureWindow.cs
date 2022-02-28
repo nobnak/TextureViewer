@@ -51,12 +51,7 @@ namespace PIP {
                             var texWidth = texAspect * texHeight;
 
                             GUILayout.Label(tex.gameObject.name);
-
-                            var rect = GUILayoutUtility.GetRect(texWidth, texHeight);
-                            if (Event.current.type == EventType.Repaint) {
-                                tex.SetData(mat);
-                                Graphics.DrawTexture(rect, tex, mat);
-                            }
+                            tex.DrawTexture(texWidth, texHeight, mat);
                         }
                         GUILayout.Space(texGap);
                     }

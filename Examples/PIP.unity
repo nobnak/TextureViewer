@@ -315,8 +315,8 @@ MonoBehaviour:
   tex: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   tuner:
     channel: 0
-    srcBlend: 5
-    dstBlend: 6
+    srcBlend: 1
+    dstBlend: 0
 --- !u!114 &728107030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,6 +612,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tex: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
   tuner:
-    channel: 1
+    channel: 0
     srcBlend: 1
     dstBlend: 0

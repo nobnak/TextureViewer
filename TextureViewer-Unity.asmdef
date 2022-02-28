@@ -2,7 +2,7 @@
     "name": "TextureViewer-Unity",
     "rootNamespace": "",
     "references": [
-        "GUID:50062d9838aa6f245b408563bbba59f6"
+        "Gist2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
