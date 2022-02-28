@@ -2,6 +2,8 @@
 
 Drawing textures with debug-specified shader in IMGUI's GUI Layout manager on Unity.
 
+This package is using [Gist2](https://github.com/nobnak/Gist2) package.
+
 ## Demo
 [![Demo](http://img.youtube.com/vi/G90Q0EHsT5g/mqdefault.jpg)](https://youtu.be/G90Q0EHsT5g)
 
