@@ -9,10 +9,6 @@ This package is using [Gist2](https://github.com/nobnak/Gist2) package.
 
 ## Example
 ```csharp
-using Gist2.Extensions.ScreenExt;
-using Gist2.Extensions.SizeExt;
-using UnityEngine;
-
 public PIPTextureHolder tex;
 
 protected Rect windowSize = new Rect(10, 10, 10, 10);
