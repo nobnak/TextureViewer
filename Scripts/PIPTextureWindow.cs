@@ -44,7 +44,7 @@ namespace PIP {
 
             using (new GUILayout.HorizontalScope()) {
                 foreach (var tex in textures) {
-                    if (tex.Value != null) {
+                    if (tex.isActiveAndEnabled && tex.Value != null) {
                         using (new GUILayout.VerticalScope()) {
                             var texSize = tex.Value.Size();
                             var texAspect = texSize.Aspect();
