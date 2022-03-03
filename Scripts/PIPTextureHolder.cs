@@ -14,10 +14,12 @@ namespace PIP {
         public Texture Value => tex;
         public void SetTexture(Texture tex) => this.tex = tex;
         public PIPTextureHolder SetData(PIPTextureMaterial mat) {
-            mat.SrcBlend = tuner.srcBlend;
-            mat.DstBlend = tuner.dstBlend;
+            if (mat != null) {
+                mat.SrcBlend = tuner.srcBlend;
+                mat.DstBlend = tuner.dstBlend;
 
-            mat.SetChannel(tuner.channel);
+                mat.SetChannel(tuner.channel);
+            }
 
             return this;
         }
