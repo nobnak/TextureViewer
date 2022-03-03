@@ -15,10 +15,8 @@ namespace PIP {
         protected Rect windowSize = new Rect(10, 10, 10, 10);
         protected PIPTextureMaterial mat;
 
-        protected bool compactList;
         protected bool visibleOptions;
         protected int selectedTexIndex;
-        protected bool fullscreen;
 
         #region unity
         private void OnEnable() {
@@ -35,14 +33,40 @@ namespace PIP {
             }
         }
         private void OnGUI() {
-            var screenSize = ScreenExtension.ScreenSize();
-            if (fullscreen && selectedTexIndex >= 0 && selectedTexIndex < textures.Count) {
-                var tex = textures[selectedTexIndex];
-                tex.DrawTexture(screenSize.x, screenSize.y, mat);
+            if (!tuner.windowIsOpen) return;
+
+            if (tuner.fullscreen && tuner.fullscreenTarget == FullscreenTarget.GUI) {
+                if (selectedTexIndex >= 0 && selectedTexIndex < textures.Count) {
+                    var screenSize = ScreenExtension.ScreenSize();
+                    var tex = textures[selectedTexIndex];
+                    tex.DrawTexture(screenSize.x, screenSize.y, mat);
+                }
             }
 
             windowSize.size = Vector2Int.zero;
-            if (tuner.windowIsOpen) windowSize = GUILayout.Window(GetInstanceID(), windowSize, Window, name);
+            windowSize = GUILayout.Window(GetInstanceID(), windowSize, Window, name);
+        }
+        private void OnRenderObject() {
+            if (!tuner.windowIsOpen) return;
+
+            var c = Camera.current;
+            if (c != Camera.main || (c.cullingMask & (1 << gameObject.layer)) == 0) return;
+
+            if (tuner.fullscreen && tuner.fullscreenTarget == FullscreenTarget.MainCamera) {
+                if (selectedTexIndex >= 0 && selectedTexIndex < textures.Count) {
+                    var tex = textures[selectedTexIndex];
+
+                    try {
+                        GL.PushMatrix();
+                        GL.LoadIdentity();
+                        GL.LoadOrtho();
+                        tex.SetData(mat);
+                        Graphics.DrawTexture(new Rect(0f, 1f, 1f, -1f), tex, mat);
+                    } finally {
+                        GL.PopMatrix();
+                    }
+                }
+            }
         }
         #endregion
 
@@ -60,7 +84,7 @@ namespace PIP {
                     for (var i = 0; i < textures.Count; i++) {
                         var tex = textures[i];
 
-                        if (compactList && i != selectedTexIndex) continue; 
+                        if (tuner.compactList && i != selectedTexIndex) continue; 
 
                         if (tex != null && tex.isActiveAndEnabled && tex.Value != null) {
                             using (new GUILayout.VerticalScope()) {
@@ -89,8 +113,8 @@ namespace PIP {
                 visibleOptions = visibleOptions.FoldOut("Options");
                 if (visibleOptions) {
                     using (new GUILayout.VerticalScope()) {
-                        compactList = GUILayout.Toggle(compactList, "Compact");
-                        fullscreen = GUILayout.Toggle(fullscreen, "fullscreen");
+                        tuner.compactList = GUILayout.Toggle(tuner.compactList, "Compact");
+                        tuner.fullscreen = GUILayout.Toggle(tuner.fullscreen, "fullscreen");
                     }
                 }
             }
@@ -99,6 +123,7 @@ namespace PIP {
         #endregion
 
         #region classes
+        public enum FullscreenTarget { GUI = 0, MainCamera }
         [System.Serializable]
         public class Tuner {
             public KeyCode keyToWindow = KeyCode.T;
@@ -107,6 +132,10 @@ namespace PIP {
             [Range(0f, 1f)]
             public float texShare = 0.2f;
             public int texGap = 10;
+
+            public bool compactList = true;
+            public bool fullscreen = false;
+            public FullscreenTarget fullscreenTarget = default;
         }
         #endregion
     }
