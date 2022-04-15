@@ -1,5 +1,6 @@
 using Gist2.Interfaces;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 namespace PIP {
@@ -8,11 +9,14 @@ namespace PIP {
 
         public Texture tex = null;
         public Tuner tuner = new Tuner();
-
+		public Events events = new Events();
 
         #region interface
         public Texture Value => tex;
-        public void SetTexture(Texture tex) => this.tex = tex;
+		public void SetTexture(Texture tex) {
+			this.tex = tex;
+			events.OnSetTexture.Invoke(tex);
+		}
         public PIPTextureHolder SetData(PIPTextureMaterial mat) {
             if (mat != null) {
                 mat.SrcBlend = tuner.srcBlend;
@@ -36,6 +40,13 @@ namespace PIP {
             public BlendMode srcBlend = BlendMode.One;
             public BlendMode dstBlend = BlendMode.Zero;
         }
+		[System.Serializable]
+		public class Events {
+			public TextureEvent OnSetTexture = new TextureEvent();
+
+			[System.Serializable]
+			public class TextureEvent : UnityEvent<Texture> { }
+		}
         #endregion
     }
 }
