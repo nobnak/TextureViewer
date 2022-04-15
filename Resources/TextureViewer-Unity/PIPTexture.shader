@@ -16,6 +16,8 @@ Shader "Unlit/PIPTexture" {
             #pragma vertex vert
             #pragma fragment frag
 
+            #define PIP_FORCE_GAMMA
+
             #include "UnityCG.cginc"
 
             struct appdata {
@@ -45,6 +47,10 @@ Shader "Unlit/PIPTexture" {
                 float4 c = cmain;
 
                 c = mul(_ChannelMixer, c);
+
+                #if !defined(UNITY_COLORSPACE_GAMMA) && defined(PIP_FORCE_GAMMA)
+                c.xyz = LinearToGammaSpace(c.xyz);
+                #endif
 
                 return c;
             }
