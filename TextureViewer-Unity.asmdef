@@ -2,7 +2,8 @@
     "name": "TextureViewer-Unity",
     "rootNamespace": "",
     "references": [
-        "Gist2"
+        "Gist2",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
