@@ -8,7 +8,8 @@ namespace PIP {
     public static class GUITextureExtension {
 
         public static Texture DrawTexture(this Texture tex, Rect rect, Material mat = null) {
-            if (Event.current.type == EventType.Repaint) Graphics.DrawTexture(rect, tex, mat);
+            if (Event.current.type == EventType.Repaint && tex != null) 
+				Graphics.DrawTexture(rect, tex, mat);
             return tex;
         }
 
