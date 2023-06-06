@@ -27,7 +27,8 @@ namespace PIP {
             mat = null;
         }
         private void Update() {
-            if (Input.GetKeyDown(tuner.keyToWindow)) {
+            if (Input.GetKeyDown(tuner.keyToWindow)
+				&& (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
                 tuner.windowIsOpen = !tuner.windowIsOpen;
                 windowSize = new Rect(10, 10, 10, 10);
             }
