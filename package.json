@@ -3,13 +3,22 @@
 		"name": "Nakata Nobuyuki",
 		"email": "nobu.nakata@gmail.com"
 	},
+
 	"name": "jp.nobnak.texture_viewer",
 	"displayName": "Texture viewer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 
 	"dependencies": {
 		"com.unity.mathematics": "1.2.6",
 		"com.unity.burst": "1.6.6",
 		"jp.nobnak.gist2": "1.4.3"
-	}
+	},
+
+	"samples": [
+		{
+			"path": "Samples~",
+			"displayName": "Samples scene",
+			"description": "Samples scene"
+		}
+	]
 }
