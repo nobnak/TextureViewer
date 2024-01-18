@@ -2,7 +2,11 @@
 
 Drawing textures with debug-specified shader in IMGUI's GUI Layout manager on Unity.
 
-This package is using [Gist2](https://github.com/nobnak/Gist2) package.
+## Installation
+Released as [UPM package on OpenUPM](https://openupm.com/packages/jp.nobnak.texture_viewer/).
+- Add URL "https://package.openupm.com" in a Scoped Registry
+- Add scope "jp.nobnak"
+- Add package "Texture Viewer" in Package Manager.
 
 ## Demo
 [![Demo](http://img.youtube.com/vi/HpbL3llkxhU/mqdefault.jpg)](https://youtu.be/HpbL3llkxhU)
