@@ -20,7 +20,6 @@ namespace PIP {
         }
         public static Rect DrawTexture(this PIPTextureHolder tex, float texWidth, float texHeight, PIPTextureMaterial mat = null) {
             var rect = GUILayoutUtility.GetRect(texWidth, texHeight);
-            if (mat != null) tex.SetData(mat);
             tex.Value.DrawTexture(rect, mat);
             return rect;
         }

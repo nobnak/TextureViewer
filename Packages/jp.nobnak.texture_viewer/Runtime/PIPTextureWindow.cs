@@ -40,6 +40,8 @@ namespace PIP {
                 if (selectedTexIndex >= 0 && selectedTexIndex < textures.Count) {
                     var screenSize = ScreenExtension.ScreenSize();
                     var tex = textures[selectedTexIndex];
+                    tex.SetData(mat);
+                    GlobalSetChannelMixer(mat);
                     tex.DrawTexture(screenSize.x, screenSize.y, mat);
                 }
             }
@@ -62,6 +64,7 @@ namespace PIP {
                         GL.LoadIdentity();
                         GL.LoadOrtho();
                         tex.SetData(mat);
+                        GlobalSetChannelMixer(mat);
                         Graphics.DrawTexture(new Rect(0f, 1f, 1f, -1f), tex, mat);
                     } finally {
                         GL.PopMatrix();
@@ -94,6 +97,8 @@ namespace PIP {
                                 var texWidth = texAspect * texHeight;
 
                                 GUILayout.Label(tex.gameObject.name);
+                                tex.SetData(mat);
+                                GlobalSetChannelMixer(mat);
                                 tex.DrawTexture(texWidth, texHeight, mat);
                             }
                             GUILayout.Space(texGap);
@@ -113,13 +118,34 @@ namespace PIP {
 
                 visibleOptions = visibleOptions.FoldOut("Options");
                 if (visibleOptions) {
-                    using (new GUILayout.VerticalScope()) {
+                    using (new GUILayout.HorizontalScope()) {
+                        var m = tuner.mixer;
+                        if (GUILayout.Toggle(m == default, "RGB"))
+                            m = default;
+                        if (GUILayout.Toggle(m == PIPTextureMaterial.ChannelMixer.R, "R"))
+                            m = PIPTextureMaterial.ChannelMixer.R;
+                        if (GUILayout.Toggle(m == PIPTextureMaterial.ChannelMixer.G, "G"))
+                            m = PIPTextureMaterial.ChannelMixer.G;
+                        if (GUILayout.Toggle(m == PIPTextureMaterial.ChannelMixer.B, "B"))
+                            m = PIPTextureMaterial.ChannelMixer.B;
+                        if (GUILayout.Toggle(m == PIPTextureMaterial.ChannelMixer.A, "A"))
+                            m = PIPTextureMaterial.ChannelMixer.A;
+                        tuner.mixer = m;
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (new GUILayout.HorizontalScope()) {
                         tuner.compactList = GUILayout.Toggle(tuner.compactList, "Compact");
                         tuner.fullscreen = GUILayout.Toggle(tuner.fullscreen, "fullscreen");
+                        GUILayout.FlexibleSpace();
                     }
                 }
             }
             GUI.DragWindow();
+        }
+
+        protected void GlobalSetChannelMixer(PIPTextureMaterial mat) {
+            if (tuner.mixer != default)
+                mat.SetChannel(tuner.mixer);
         }
         #endregion
 
@@ -137,6 +163,7 @@ namespace PIP {
             public bool compactList = true;
             public bool fullscreen = false;
             public FullscreenTarget fullscreenTarget = default;
+            public PIPTextureMaterial.ChannelMixer mixer = default;
         }
         #endregion
     }
