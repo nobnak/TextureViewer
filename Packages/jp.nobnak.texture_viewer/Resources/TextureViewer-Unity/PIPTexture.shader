@@ -4,6 +4,8 @@ Shader "Unlit/PIPTexture" {
 
         _SrcBlend("SrcBlend", Int) = 1 // One
         _DstBlend("DstBlend", Int) = 0 // Zero
+
+        _Opacity ("Opacity", Range(0, 1)) = 1
     }
     SubShader {
         Blend[_SrcBlend][_DstBlend]
@@ -31,9 +33,12 @@ Shader "Unlit/PIPTexture" {
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
 
+            CBUFFER_START(MyVariables)
+            float4 _MainTex_ST;
             float4x4 _ChannelMixer;
+            float _Opacity;
+            CBUFFER_END
 
             v2f vert (appdata v) {
                 v2f o;
@@ -51,6 +56,8 @@ Shader "Unlit/PIPTexture" {
                 #if !defined(UNITY_COLORSPACE_GAMMA) && defined(PIP_FORCE_GAMMA)
                 c.xyz = LinearToGammaSpace(c.xyz);
                 #endif
+
+                c.a *= _Opacity;
 
                 return c;
             }

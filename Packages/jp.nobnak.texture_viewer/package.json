@@ -5,7 +5,7 @@
   },
   "name": "jp.nobnak.texture_viewer",
   "displayName": "Texture viewer",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "dependencies": {
     "com.unity.mathematics": "1.2.6",
     "jp.nobnak.gist2": "1.4.3"

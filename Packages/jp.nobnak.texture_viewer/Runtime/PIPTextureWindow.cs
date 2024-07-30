@@ -3,6 +3,7 @@ using Gist2.Extensions.SizeExt;
 using Gist2.GUIExt;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace PIP {
 
@@ -41,7 +42,7 @@ namespace PIP {
                     var screenSize = ScreenExtension.ScreenSize();
                     var tex = textures[selectedTexIndex];
                     tex.SetData(mat);
-                    GlobalSetChannelMixer(mat);
+                    GlobalSet(mat);
                     tex.DrawTexture(screenSize.x, screenSize.y, mat);
                 }
             }
@@ -64,7 +65,7 @@ namespace PIP {
                         GL.LoadIdentity();
                         GL.LoadOrtho();
                         tex.SetData(mat);
-                        GlobalSetChannelMixer(mat);
+                        GlobalSet(mat);
                         Graphics.DrawTexture(new Rect(0f, 1f, 1f, -1f), tex, mat);
                     } finally {
                         GL.PopMatrix();
@@ -98,7 +99,7 @@ namespace PIP {
 
                                 GUILayout.Label(tex.gameObject.name);
                                 tex.SetData(mat);
-                                GlobalSetChannelMixer(mat);
+                                GlobalSet(mat);
                                 tex.DrawTexture(texWidth, texHeight, mat);
                             }
                             GUILayout.Space(texGap);
@@ -134,6 +135,11 @@ namespace PIP {
                         GUILayout.FlexibleSpace();
                     }
                     using (new GUILayout.HorizontalScope()) {
+                        tuner.forceTransparent = GUILayout.Toggle(tuner.forceTransparent, "Transparent");
+                        tuner.opacity = GUILayout.HorizontalSlider(tuner.opacity, 0f, 1f, GUILayout.Width(100f));
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (new GUILayout.HorizontalScope()) {
                         tuner.compactList = GUILayout.Toggle(tuner.compactList, "Compact");
                         tuner.fullscreen = GUILayout.Toggle(tuner.fullscreen, "fullscreen");
                         GUILayout.FlexibleSpace();
@@ -143,9 +149,16 @@ namespace PIP {
             GUI.DragWindow();
         }
 
-        protected void GlobalSetChannelMixer(PIPTextureMaterial mat) {
+        protected void GlobalSet(PIPTextureMaterial mat) {
             if (tuner.mixer != default)
                 mat.SetChannel(tuner.mixer);
+
+            mat.Opacity = 1f;
+            if (tuner.forceTransparent && tuner.fullscreen) {
+                mat.Opacity = tuner.opacity;
+                mat.SrcBlend = BlendMode.SrcAlpha;
+                mat.DstBlend = BlendMode.OneMinusSrcAlpha;
+            }
         }
         #endregion
 
@@ -164,6 +177,10 @@ namespace PIP {
             public bool fullscreen = false;
             public FullscreenTarget fullscreenTarget = default;
             public PIPTextureMaterial.ChannelMixer mixer = default;
+
+            public bool forceTransparent = false;
+            [Range(0f, 1f)]
+            public float opacity = 1f;
         }
         #endregion
     }

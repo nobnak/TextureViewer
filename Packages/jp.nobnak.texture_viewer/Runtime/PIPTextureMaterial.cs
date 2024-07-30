@@ -16,11 +16,13 @@ namespace PIP {
         public static readonly int P_SrcBlend = Shader.PropertyToID("_SrcBlend");
         public static readonly int P_DstBlend = Shader.PropertyToID("_DstBlend");
         public static readonly int P_ChannelMixer = Shader.PropertyToID("_ChannelMixer");
+        public static readonly int P_Opacity = Shader.PropertyToID("_Opacity");
 
         #region properties
         public Matrix4x4 ChannelMixerMatrix { get; set; }
         public BlendMode SrcBlend { get; set; }
         public BlendMode DstBlend { get; set; }
+        public float Opacity { get; set; }
         #endregion
 
         protected Material mat;
@@ -38,6 +40,7 @@ namespace PIP {
                 mat.SetInt(P_SrcBlend, (int)SrcBlend);
                 mat.SetInt(P_DstBlend, (int)DstBlend);
                 mat.SetMatrix(P_ChannelMixer, ChannelMixerMatrix);
+                mat.SetFloat(P_Opacity, Opacity);
                 return mat;
             }
         }
