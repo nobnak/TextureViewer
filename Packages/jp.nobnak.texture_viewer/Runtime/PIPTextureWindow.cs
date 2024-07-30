@@ -150,15 +150,22 @@ namespace PIP {
         }
 
         protected void GlobalSet(PIPTextureMaterial mat) {
-            if (tuner.mixer != default)
-                mat.SetChannel(tuner.mixer);
+            var opacityOp = default(PIPTextureMaterial.OpacityOp);
+            var opacity = 1f;
 
-            mat.Opacity = 1f;
+            if (tuner.mixer != default) {
+                opacityOp = PIPTextureMaterial.OpacityOp.Override;
+                mat.SetChannel(tuner.mixer);
+            }
+
             if (tuner.forceTransparent && tuner.fullscreen) {
-                mat.Opacity = tuner.opacity;
+                opacity = tuner.opacity;
                 mat.SrcBlend = BlendMode.SrcAlpha;
                 mat.DstBlend = BlendMode.OneMinusSrcAlpha;
             }
+
+            mat.K_OpacityOp = opacityOp;
+            mat.Opacity = opacity;
         }
         #endregion
 

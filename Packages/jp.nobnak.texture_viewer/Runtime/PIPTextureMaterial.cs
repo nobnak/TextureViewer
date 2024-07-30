@@ -10,6 +10,10 @@ namespace PIP {
     public class PIPTextureMaterial : System.IDisposable, IValue<Material> {
 
         public enum ChannelMixer { None = 0, R, G, B, A }
+        public enum OpacityOp {
+            Multiply = default, 
+            Override
+        }
 
         public const string PATH = "TextureViewer-Unity/PIPTexture";
 
@@ -22,6 +26,7 @@ namespace PIP {
         public Matrix4x4 ChannelMixerMatrix { get; set; }
         public BlendMode SrcBlend { get; set; }
         public BlendMode DstBlend { get; set; }
+        public OpacityOp K_OpacityOp { get; set; }
         public float Opacity { get; set; }
         #endregion
 
@@ -37,6 +42,12 @@ namespace PIP {
         public Material Value {
             get {
                 mat.shaderKeywords = null;
+                if (K_OpacityOp != default) {
+                    var keyword = $"_{nameof(OpacityOp).ToUpper()}_{K_OpacityOp.ToString().ToUpper()}";
+                    mat.EnableKeyword(keyword);
+                }
+
+
                 mat.SetInt(P_SrcBlend, (int)SrcBlend);
                 mat.SetInt(P_DstBlend, (int)DstBlend);
                 mat.SetMatrix(P_ChannelMixer, ChannelMixerMatrix);

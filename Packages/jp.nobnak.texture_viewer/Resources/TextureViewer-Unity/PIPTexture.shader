@@ -5,6 +5,7 @@ Shader "Unlit/PIPTexture" {
         _SrcBlend("SrcBlend", Int) = 1 // One
         _DstBlend("DstBlend", Int) = 0 // Zero
 
+        [KeywordEnum(Multiply, Override)] _OpacityOp ("Opacity Op", Float) = 0
         _Opacity ("Opacity", Range(0, 1)) = 1
     }
     SubShader {
@@ -15,6 +16,8 @@ Shader "Unlit/PIPTexture" {
 
         Pass {
             CGPROGRAM
+            #pragma multi_compile _OPACITYOP_MULTIPLY _OPACITYOP_OVERRIDE
+
             #pragma vertex vert
             #pragma fragment frag
 
@@ -57,7 +60,11 @@ Shader "Unlit/PIPTexture" {
                 c.xyz = LinearToGammaSpace(c.xyz);
                 #endif
 
+                #if defined(_OPACITYOP_OVERRIDE)
+                c.a = _Opacity;
+                #else
                 c.a *= _Opacity;
+                #endif
 
                 return c;
             }
