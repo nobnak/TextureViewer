@@ -1,7 +1,5 @@
-using Gist2.Extensions.ScreenExt;
-using Gist2.Extensions.SizeExt;
-using Gist2.GUIExt;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -18,6 +16,7 @@ namespace PIP {
 
         protected bool visibleOptions;
         protected int selectedTexIndex;
+        protected GUIStyle foldoutOptions;
 
         #region unity
         private void OnEnable() {
@@ -39,13 +38,16 @@ namespace PIP {
 
             if (tuner.fullscreen && tuner.fullscreenTarget == FullscreenTarget.GUI) {
                 if (selectedTexIndex >= 0 && selectedTexIndex < textures.Count) {
-                    var screenSize = ScreenExtension.ScreenSize();
+                    var screenSize = ScreenSize();
                     var tex = textures[selectedTexIndex];
                     tex.SetData(mat);
                     GlobalSet(mat);
                     tex.DrawTexture(screenSize.x, screenSize.y, mat);
                 }
             }
+
+            if (foldoutOptions == null)
+                foldoutOptions = GenerateFoldout();
 
             windowSize.size = Vector2Int.zero;
             windowSize = GUILayout.Window(GetInstanceID(), windowSize, Window, name);
@@ -77,7 +79,7 @@ namespace PIP {
 
         #region member
         protected void Window(int id) { 
-            var screenSize = ScreenExtension.ScreenSize();
+            var screenSize = ScreenSize();
             var texShare = tuner.texShare;
             var texHeight = Mathf.RoundToInt(texShare * screenSize.y);
             var texGap = tuner.texGap;
@@ -93,8 +95,8 @@ namespace PIP {
 
                         if (tex != null && tex.isActiveAndEnabled && tex.Value != null) {
                             using (new GUILayout.VerticalScope()) {
-                                var texSize = tex.Value.Size();
-                                var texAspect = texSize.Aspect();
+                                var texSize = tex.Size;
+                                var texAspect = (float)texSize.x / texSize.y;
                                 var texWidth = texAspect * texHeight;
 
                                 GUILayout.Label(tex.gameObject.name);
@@ -117,7 +119,8 @@ namespace PIP {
                     selectedTexIndex = (totalTex == 0) ? -1 : (selectedTexIndex + totalTex) % totalTex;
                 }
 
-                visibleOptions = visibleOptions.FoldOut("Options");
+                var visibleTitle = $"{(visibleOptions ? "-" : "+")} Options";
+                visibleOptions = GUILayout.Toggle(visibleOptions, visibleTitle, foldoutOptions);
                 if (visibleOptions) {
                     using (new GUILayout.HorizontalScope()) {
                         var m = tuner.mixer;
@@ -166,6 +169,24 @@ namespace PIP {
 
             mat.K_OpacityOp = opacityOp;
             mat.Opacity = opacity;
+        }
+        protected int2 ScreenSize() => new int2(Screen.width, Screen.height);
+        protected static GUIStyle GenerateFoldout() {
+            var styleFoldout = new GUIStyle(GUI.skin.label) {
+                alignment = TextAnchor.MiddleLeft
+            };
+            var coff = styleFoldout.normal.textColor;
+            var con = Color.white;
+
+            styleFoldout.onNormal.textColor = con;
+            styleFoldout.onHover.textColor = con;
+            styleFoldout.active.textColor = con;
+
+            styleFoldout.normal.textColor = coff;
+            styleFoldout.hover.textColor = coff;
+            styleFoldout.onActive.textColor = coff;
+
+            return styleFoldout;
         }
         #endregion
 

@@ -1,11 +1,11 @@
-using Gist2.Interfaces;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 namespace PIP {
 
-    public class PIPTextureHolder : MonoBehaviour, IValue<Texture> {
+    public class PIPTextureHolder : MonoBehaviour {
 
         public Texture tex = null;
         public Tuner tuner = new Tuner();
@@ -13,6 +13,8 @@ namespace PIP {
 
         #region interface
         public Texture Value => tex;
+        public int2 Size => tex != null ? new int2(tex.width, tex.height) : int2.zero;
+
 		public void SetTexture(Texture tex) {
 			this.tex = tex;
 			events.OnSetTexture.Invoke(tex);

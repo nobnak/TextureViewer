@@ -1,13 +1,9 @@
-using Gist2.Extensions.ComponentExt;
-using Gist2.Interfaces;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace PIP {
 
-    public class PIPTextureMaterial : System.IDisposable, IValue<Material> {
+    public class PIPTextureMaterial : System.IDisposable {
 
         public enum ChannelMixer { None = 0, R, G, B, A }
         public enum OpacityOp {
@@ -59,7 +55,10 @@ namespace PIP {
 
         #region IDisposable
         public void Dispose() {
-            mat.Destroy();
+            if (mat != null) {
+                mat.Dispose();
+                mat = null;
+            }
         }
         #endregion
 
